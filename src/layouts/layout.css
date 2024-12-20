@@ -1,0 +1,78 @@
+/* Contêiner principal */
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Top bar */
+.topbar {
+    background-color: white;
+    padding: 10px 20px;
+    border-bottom: 2px solid black; /* Linha preta separando a barra */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinha a logo à esquerda */
+}
+
+/* Estilo da logo */
+.sidebar-header .logo {
+    width: 150px; /* Logo com tamanho fixo */
+    height: auto;
+}
+
+/* Layout principal */
+.main-content {
+    display: flex;
+    flex-grow: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #4CAF50; /* Cor verde do menu */
+    width: 250px;
+    padding-top: 20px;
+    flex-shrink: 0;
+}
+
+/* Estilo do menu */
+.sidebar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin: 15px 0;
+}
+
+.sidebar-menu li a {
+    color: white; /* Texto branco */
+    font-weight: bold; /* Texto em negrito */
+    text-decoration: none;
+    display: block;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.sidebar-menu li a:hover {
+    background-color: #45a049; /* Alterar a cor de fundo no hover */
+}
+
+/* Content */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+/* Footer */
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
