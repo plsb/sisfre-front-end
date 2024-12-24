@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import api from '../../../services/api';
 import CustomSnackbar from '../../../components/CustomSnackbar';
-const moment = require('moment');
 
 const SemesterRegistrationPopup = ({ open, onClose, onSave, semester }) => {
     const [formData, setFormData] = useState({
@@ -20,18 +19,13 @@ const SemesterRegistrationPopup = ({ open, onClose, onSave, semester }) => {
     useEffect(() => {
         if (semester) {
 
-            const formatDate = (date) => {
-                if (!date) return '';
-                return moment(date).utcOffset(0).format('YYYY-MM-DD'); // Format the date to 'YYYY-MM-DD'
-            };
-
             setFormData({
                 year: semester.year,
                 semester: semester.semester,
                 type: semester.type,
                 status: semester.status,
-                start_date: formatDate(semester.start_date),
-                end_date: formatDate(semester.end_date),
+                start_date: semester.start_date,
+                end_date: semester.end_date,
             });
         } else {
             setFormData({

@@ -114,7 +114,7 @@ const CourseRegistrationPopup = ({ open, onClose, onSave, course, users }) => {
                                 options={coordinatorOptions}
                                 value={coordinatorOptions.find(option => option.value === coordinatorId)}
                                 onChange={(selectedOption) => setCoordinatorId(selectedOption.value)}
-                                placeholder="Selecione o coordenador"
+                                placeholder="Selecione o coordenador..."
                                 isClearable
                             />
                             {errors.coordinator && (

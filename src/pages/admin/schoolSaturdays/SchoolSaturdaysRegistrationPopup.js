@@ -99,6 +99,7 @@ const SchoolSaturdaysRegistrationPopup = ({ open, onClose, onSave, schoolSaturda
                                 { value: 'sexta', label: 'Sexta' },
                             ]}
                             isInvalid={!!errors.weekday}
+                            placeholder="Selecione um dia da semana..."
                         />
                         {errors.weekday && (
                             <div className="invalid-feedback" style={{ display: 'block' }}>
@@ -113,6 +114,7 @@ const SchoolSaturdaysRegistrationPopup = ({ open, onClose, onSave, schoolSaturda
                             onChange={(selectedOption) => setSemesterId(selectedOption?.value || '')}
                             options={semesterOptions}
                             isInvalid={!!errors.semesterId}
+                            placeholder="Selecione um semestre..."
                         />
                         {errors.semesterId && (
                             <div className="invalid-feedback" style={{ display: 'block' }}>

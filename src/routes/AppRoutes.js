@@ -9,6 +9,7 @@ import CourseList from "../pages/admin/course/CourseList";
 import SubjectList from "../pages/admin/subject/SubjectList";
 import SemesterList from "../pages/admin/semester/SemesterList";
 import SchoolSaturdaysList from "../pages/admin/schoolSaturdays/SchoolSaturdaysList";
+import HolidaysList from "../pages/admin/holidays/HolidaysList";
 
 const AppRoutes = () => {
     const { isAuthenticated } = useAuth();
@@ -40,6 +41,8 @@ const AppRoutes = () => {
             <Route path="/semesters" element={isAuthenticated ? <SemesterList /> : <Login />} />
 
             <Route path="/schoolsatudays" element={isAuthenticated ? <SchoolSaturdaysList /> : <Login />} />
+
+            <Route path="/holidays" element={isAuthenticated ? <HolidaysList /> : <Login />} />
         </Routes>
     );
 };
