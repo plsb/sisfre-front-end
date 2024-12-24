@@ -3,32 +3,32 @@ import api from '../../../services/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminMenu from "../../../layouts/menus/AdminMenu";
 import Layout from "../../../layouts/Layout";
-import UserRegistrationPopup from './UserRegistrationPopup';
+import SubjectRegistrationPopup from './SubjectRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
-import ConfirmationDialog from '../../../components/ConfirmationDialog'; // Importando o componente
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
 
-const UserList = () => {
-    const [users, setUsers] = useState([]);
+const SubjectList = () => {
+    const [subjects, setSubjects] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [popupOpen, setPopupOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedSubject, setSelectedSubject] = useState(null);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', type: '' });
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [userToDelete, setUserToDelete] = useState(null);
+    const [subjectToDelete, setSubjectToDelete] = useState(null);
 
-    const getUsers = async () => {
-        let url = `/users?page=${page}`;
+    const getSubjects = async () => {
+        let url = `/subjects?page=${page}`;
         if (search) {
-            url += `&username=${search}`;
+            url += `&name=${search}`;
         }
         try {
             setLoading(true);
             const response = await api.get(url);
-            setUsers(response.data.users || []);
+            setSubjects(response.data.subjects || []);
             setTotalPages(response.data.totalPages || 1);
         } catch (err) {
             setError(err);
@@ -39,62 +39,62 @@ const UserList = () => {
 
     const handleSearch = () => {
         setPage(1);
-        getUsers();
+        getSubjects();
     };
 
-    const handleAddUser = () => {
-        setSelectedUser(null);
+    const handleAddSubject = () => {
+        setSelectedSubject(null);
         setPopupOpen(true);
     };
 
-    const handleSaveUser = () => {
+    const handleSaveSubject = () => {
         setPopupOpen(false);
-        getUsers();
+        getSubjects();
     };
 
-    const handleEdit = (userId) => {
-        const userToEdit = users.find((user) => user.id === userId);
-        setSelectedUser(userToEdit);
+    const handleEdit = (subjectId) => {
+        const subjectToEdit = subjects.find((subject) => subject.id === subjectId);
+        setSelectedSubject(subjectToEdit);
         setPopupOpen(true);
     };
 
-    const handleDeleteRequest = (userId) => {
-        setUserToDelete(userId);
+    const handleDeleteRequest = (subjectId) => {
+        setSubjectToDelete(subjectId);
         setDeleteDialogOpen(true);
     };
 
     const handleDeleteConfirm = async () => {
-        if (userToDelete) {
+        if (subjectToDelete) {
             try {
-                await api.delete(`/users/${userToDelete}`);
-                getUsers();
-                setSnackbar({ open: true, message: 'Usuário deletado com sucesso!', type: 'success' });
+                await api.delete(`/subjects/${subjectToDelete}`);
+                getSubjects();
+                setSnackbar({ open: true, message: 'Disciplina deletada com sucesso!', type: 'success' });
             } catch (err) {
-                setSnackbar({ open: true, message: 'Erro ao deletar o usuário. Tente novamente.', type: 'error' });
+                setSnackbar({ open: true, message: 'Erro ao deletar a disciplina. Tente novamente.', type: 'error' });
             }
         }
         setDeleteDialogOpen(false);
-        setUserToDelete(null);
+        setSubjectToDelete(null);
     };
 
     const handleDeleteCancel = () => {
         setDeleteDialogOpen(false);
-        setUserToDelete(null);
+        setSubjectToDelete(null);
     };
 
     useEffect(() => {
-        getUsers();
+        getSubjects();
     }, [page]);
 
     return (
         <Layout sidebar={<AdminMenu />}>
             <div className="container mt-4">
-                <h4>Lista de Usuários</h4>
+                <h4>Lista de Disciplinas</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Pesquisar por nome"
+                        placeholder="Pesquisar por descrição"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         onKeyDown={(e) => {
@@ -106,8 +106,8 @@ const UserList = () => {
                     <button className="btn btn-primary" onClick={handleSearch}>
                         Pesquisar
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddUser}>
-                        Cadastrar Novo Usuário
+                    <button className="btn btn-secondary ms-auto" onClick={handleAddSubject}>
+                        Cadastrar Nova Disciplina
                     </button>
                 </div>
                 {loading ? (
@@ -115,35 +115,35 @@ const UserList = () => {
                         <span className="sr-only">Carregando...</span>
                     </div>
                 ) : error ? (
-                    <div className="alert alert-danger">{`Erro ao carregar usuários: ${JSON.stringify(error)}`}</div>
+                    <div className="alert alert-danger">{`Erro ao carregar matérias: ${JSON.stringify(error)}`}</div>
                 ) : (
                     <div className="table-responsive">
                         <table className="table table-bordered">
                             <thead>
                             <tr>
                                 <th className="d-none">ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
+                                <th>Descrição</th>
+                                <th>Sigla</th>
                                 <th className="text-center">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {users.length > 0 ? (
-                                users.map((user) => (
-                                    <tr key={user.id}>
-                                        <td className="d-none">{user.id}</td>
-                                        <td>{user.username}</td>
-                                        <td>{user.email}</td>
+                            {subjects.length > 0 ? (
+                                subjects.map((subject) => (
+                                    <tr key={subject.id}>
+                                        <td className="d-none">{subject.id}</td>
+                                        <td>{subject.name}</td>
+                                        <td>{subject.acronym}</td>
                                         <td className="text-center">
                                             <button
                                                 className="btn btn-primary me-2"
-                                                onClick={() => handleEdit(user.id)}
+                                                onClick={() => handleEdit(subject.id)}
                                             >
                                                 Editar
                                             </button>
                                             <button
                                                 className="btn btn-danger"
-                                                onClick={() => handleDeleteRequest(user.id)}
+                                                onClick={() => handleDeleteRequest(subject.id)}
                                             >
                                                 Excluir
                                             </button>
@@ -153,7 +153,7 @@ const UserList = () => {
                             ) : (
                                 <tr>
                                     <td colSpan={4} className="text-center">
-                                        Nenhum usuário encontrado
+                                        Nenhuma disciplina encontrada
                                     </td>
                                 </tr>
                             )}
@@ -176,11 +176,11 @@ const UserList = () => {
                         </ul>
                     </nav>
                 </div>
-                <UserRegistrationPopup
+                <SubjectRegistrationPopup
                     open={popupOpen}
                     onClose={() => setPopupOpen(false)}
-                    onSave={handleSaveUser}
-                    user={selectedUser}
+                    onSave={handleSaveSubject}
+                    subject={selectedSubject}
                 />
             </div>
             <CustomSnackbar
@@ -192,7 +192,7 @@ const UserList = () => {
             <ConfirmationDialog
                 open={deleteDialogOpen}
                 title="Confirmar Exclusão"
-                message="Tem certeza de que deseja excluir este usuário?"
+                message="Tem certeza de que deseja excluir esta disciplina?"
                 onConfirm={handleDeleteConfirm}
                 onCancel={handleDeleteCancel}
             />
@@ -200,4 +200,4 @@ const UserList = () => {
     );
 };
 
-export default UserList;
+export default SubjectList;

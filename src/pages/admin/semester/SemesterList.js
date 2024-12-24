@@ -1,34 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../../services/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminMenu from "../../../layouts/menus/AdminMenu";
 import Layout from "../../../layouts/Layout";
-import UserRegistrationPopup from './UserRegistrationPopup';
+import SemesterRegistrationPopup from './SemesterRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
-import ConfirmationDialog from '../../../components/ConfirmationDialog'; // Importando o componente
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
+const moment = require('moment');
 
-const UserList = () => {
-    const [users, setUsers] = useState([]);
+const SemesterList = () => {
+    const [semesters, setSemesters] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [popupOpen, setPopupOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedSemester, setSelectedSemester] = useState(null);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', type: '' });
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [userToDelete, setUserToDelete] = useState(null);
+    const [semesterToDelete, setSemesterToDelete] = useState(null);
 
-    const getUsers = async () => {
-        let url = `/users?page=${page}`;
+    const getSemesters = async () => {
+        let url = `/semesters?page=${page}`;
         if (search) {
-            url += `&username=${search}`;
+            url += `&year=${search}`;
         }
         try {
             setLoading(true);
             const response = await api.get(url);
-            setUsers(response.data.users || []);
+            setSemesters(response.data.semesters || []);
             setTotalPages(response.data.totalPages || 1);
         } catch (err) {
             setError(err);
@@ -39,62 +40,67 @@ const UserList = () => {
 
     const handleSearch = () => {
         setPage(1);
-        getUsers();
+        getSemesters();
     };
 
-    const handleAddUser = () => {
-        setSelectedUser(null);
+    const handleAddSemester = () => {
+        setSelectedSemester(null);
         setPopupOpen(true);
     };
 
-    const handleSaveUser = () => {
+    const handleSaveSemester = () => {
         setPopupOpen(false);
-        getUsers();
+        getSemesters();
     };
 
-    const handleEdit = (userId) => {
-        const userToEdit = users.find((user) => user.id === userId);
-        setSelectedUser(userToEdit);
+    const handleEdit = (semesterId) => {
+        const semesterToEdit = semesters.find((semester) => semester.id === semesterId);
+        setSelectedSemester(semesterToEdit);
         setPopupOpen(true);
     };
 
-    const handleDeleteRequest = (userId) => {
-        setUserToDelete(userId);
+    const handleDeleteRequest = (semesterId) => {
+        setSemesterToDelete(semesterId);
         setDeleteDialogOpen(true);
     };
 
     const handleDeleteConfirm = async () => {
-        if (userToDelete) {
+        if (semesterToDelete) {
             try {
-                await api.delete(`/users/${userToDelete}`);
-                getUsers();
-                setSnackbar({ open: true, message: 'Usuário deletado com sucesso!', type: 'success' });
+                await api.delete(`/semesters/${semesterToDelete}`);
+                getSemesters();
+                setSnackbar({ open: true, message: 'Semestre deletado com sucesso!', type: 'success' });
             } catch (err) {
-                setSnackbar({ open: true, message: 'Erro ao deletar o usuário. Tente novamente.', type: 'error' });
+                setSnackbar({ open: true, message: 'Erro ao deletar o semestre. Tente novamente.', type: 'error' });
             }
         }
         setDeleteDialogOpen(false);
-        setUserToDelete(null);
+        setSemesterToDelete(null);
     };
 
     const handleDeleteCancel = () => {
         setDeleteDialogOpen(false);
-        setUserToDelete(null);
+        setSemesterToDelete(null);
     };
 
     useEffect(() => {
-        getUsers();
+        getSemesters();
     }, [page]);
 
+    const formatDate = (dateString) => {
+        const formattedDate = moment(dateString).format('DD/MM/YYYY');
+        return formattedDate;
+    }
+
     return (
-        <Layout sidebar={<AdminMenu />}>
+        <Layout sidebar={<AdminMenu/>}>
             <div className="container mt-4">
-                <h4>Lista de Usuários</h4>
+                <h4>Lista de Semestres</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Pesquisar por nome"
+                        placeholder="Pesquisar por ano"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         onKeyDown={(e) => {
@@ -106,8 +112,8 @@ const UserList = () => {
                     <button className="btn btn-primary" onClick={handleSearch}>
                         Pesquisar
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddUser}>
-                        Cadastrar Novo Usuário
+                    <button className="btn btn-secondary ms-auto" onClick={handleAddSemester}>
+                        Cadastrar Novo Semestre
                     </button>
                 </div>
                 {loading ? (
@@ -115,35 +121,44 @@ const UserList = () => {
                         <span className="sr-only">Carregando...</span>
                     </div>
                 ) : error ? (
-                    <div className="alert alert-danger">{`Erro ao carregar usuários: ${JSON.stringify(error)}`}</div>
+                    <div className="alert alert-danger">{`Erro ao carregar semestres: ${JSON.stringify(error)}`}</div>
                 ) : (
                     <div className="table-responsive">
                         <table className="table table-bordered">
                             <thead>
                             <tr>
                                 <th className="d-none">ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
+                                <th>Ano</th>
+                                <th>Semestre</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Período</th>
                                 <th className="text-center">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {users.length > 0 ? (
-                                users.map((user) => (
-                                    <tr key={user.id}>
-                                        <td className="d-none">{user.id}</td>
-                                        <td>{user.username}</td>
-                                        <td>{user.email}</td>
+                            {semesters.length > 0 ? (
+                                semesters.map((semester) => (
+                                    <tr
+                                        key={semester.id}
+                                        className={semester.status ? 'table-success' : 'table-danger'}
+                                    >
+                                        <td className="d-none">{semester.id}</td>
+                                        <td>{semester.year}</td>
+                                        <td>{semester.semester}</td>
+                                        <td>{semester.type === 'regular' ? 'Regular' : 'Convencional'}</td>
+                                        <td>{semester.status ? 'Ativo' : 'Inativo'}</td>
+                                        <td>{`${formatDate(semester.start_date)} - ${formatDate(semester.end_date)}`}</td>
                                         <td className="text-center">
                                             <button
                                                 className="btn btn-primary me-2"
-                                                onClick={() => handleEdit(user.id)}
+                                                onClick={() => handleEdit(semester.id)}
                                             >
                                                 Editar
                                             </button>
                                             <button
                                                 className="btn btn-danger"
-                                                onClick={() => handleDeleteRequest(user.id)}
+                                                onClick={() => handleDeleteRequest(semester.id)}
                                             >
                                                 Excluir
                                             </button>
@@ -152,8 +167,8 @@ const UserList = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={4} className="text-center">
-                                        Nenhum usuário encontrado
+                                    <td colSpan={7} className="text-center">
+                                        Nenhum semestre encontrado
                                     </td>
                                 </tr>
                             )}
@@ -176,23 +191,23 @@ const UserList = () => {
                         </ul>
                     </nav>
                 </div>
-                <UserRegistrationPopup
+                <SemesterRegistrationPopup
                     open={popupOpen}
                     onClose={() => setPopupOpen(false)}
-                    onSave={handleSaveUser}
-                    user={selectedUser}
+                    onSave={handleSaveSemester}
+                    semester={selectedSemester}
                 />
             </div>
             <CustomSnackbar
                 type={snackbar.type}
                 message={snackbar.message}
                 duration={6000}
-                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                onClose={() => setSnackbar({...snackbar, open: false})}
             />
             <ConfirmationDialog
                 open={deleteDialogOpen}
                 title="Confirmar Exclusão"
-                message="Tem certeza de que deseja excluir este usuário?"
+                message="Tem certeza de que deseja excluir este semestre?"
                 onConfirm={handleDeleteConfirm}
                 onCancel={handleDeleteCancel}
             />
@@ -200,4 +215,4 @@ const UserList = () => {
     );
 };
 
-export default UserList;
+export default SemesterList;

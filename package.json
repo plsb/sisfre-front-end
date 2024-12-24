@@ -10,11 +10,16 @@
     "@mui/material": "^6.2.1",
     "@mui/styles": "^6.2.1",
     "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
     "cra-template": "1.2.0",
+    "moment": "^2.30.1",
     "react": "^19.0.0",
+    "react-bootstrap": "^2.10.7",
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.28.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.9.0",
+    "styled-components": "^6.1.13",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
