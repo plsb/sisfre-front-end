@@ -14,6 +14,7 @@ import ClassList from "../pages/coordinator/class/ClassList";
 import AccessDenied from "../layouts/AccessDenied";
 import CoordinatorMenu from "../layouts/menus/CoordinatorMenu";
 import useAuth from "../hooks/useAuth";
+import ClassTimetable from "../pages/coordinator/class/timeTable/ClassTimetable";
 
 const AppRoutes = () => {
     const { roles } = useAuth();
@@ -105,6 +106,14 @@ const AppRoutes = () => {
                 element={
                     <ProtectedRoute allowedRoles={['coordinator']}>
                         <ClassList />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/timetable"
+                element={
+                    <ProtectedRoute allowedRoles={['coordinator']}>
+                        <ClassTimetable />
                     </ProtectedRoute>
                 }
             />

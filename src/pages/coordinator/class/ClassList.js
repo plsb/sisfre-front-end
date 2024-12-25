@@ -7,6 +7,9 @@ import ClassRegistrationPopup from './ClassRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import CoordinatorMenu from "../../../layouts/menus/CoordinatorMenu";
+import ClassCard from './ClassCard';
+import {Search} from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
 
 const ClassList = () => {
     const [classes, setClasses] = useState([]);
@@ -22,11 +25,19 @@ const ClassList = () => {
     const [snackbar, setSnackbar] = useState({ open: false, message: '', type: '' });
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [classToDelete, setClassToDelete] = useState(null);
+    const [selectedCourse, setSelectedCourse] = useState('');
+    const [selectedSemester, setSelectedSemester] = useState('');
 
     const getClasses = async () => {
         let url = `/classes?page=${page}`;
         if (search) {
             url += `&description=${search}`;
+        }
+        if (selectedCourse) {
+            url += `&courseId=${selectedCourse}`;
+        }
+        if (selectedSemester) {
+            url += `&semesterId=${selectedSemester}`;
         }
         try {
             setLoading(true);
@@ -110,29 +121,42 @@ const ClassList = () => {
     }, [page]);
 
     return (
-        <Layout sidebar={<CoordinatorMenu />}>
+        <Layout sidebar={<CoordinatorMenu/>}>
             <div className="container mt-4">
-                <h4>Lista de Turmas</h4>
+                <h4 className='text-start'>Turmas</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
-                    <input
-                        type="text"
+                    <select
                         className="form-control"
-                        placeholder="Pesquisar por descrição"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleSearch();
-                            }
-                        }}
-                    />
-                    <button className="btn btn-primary" onClick={handleSearch}>
-                        Pesquisar
+                        value={selectedCourse}
+                        onChange={(e) => setSelectedCourse(e.target.value)}
+                    >
+                        <option value="">Selecione o curso</option>
+                        {courses.map((course) => (
+                            <option key={course.id} value={course.id}>
+                                {course.name}
+                            </option>
+                        ))}
+                    </select>
+                    <select
+                        className="form-control"
+                        value={selectedSemester}
+                        onChange={(e) => setSelectedSemester(e.target.value)}
+                    >
+                        <option value="">Selecione o semestre</option>
+                        {semesters.map((semester) => (
+                            <option key={semester.id} value={semester.id}>
+                                {semester?.year}.{semester?.semester} ({semester?.type})
+                            </option>
+                        ))}
+                    </select>
+                    <button className="btn" onClick={handleSearch}>
+                        <Search style={{fontSize: 40, color: 'green'}} titleAccess='Pesquisar Turma'/>
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddClass}>
-                        Cadastrar Nova Turma
+                    <button className="btn ms-auto" onClick={handleAddClass}>
+                        <AddIcon style={{fontSize: 40, color: 'blue'}} titleAccess='Cadastrar Nova Turma'/>
                     </button>
                 </div>
+
                 {loading ? (
                     <div className="spinner-border text-primary" role="status">
                         <span className="sr-only">Carregando...</span>
@@ -140,89 +164,46 @@ const ClassList = () => {
                 ) : error ? (
                     <div className="alert alert-danger">{`Erro ao carregar turmas: ${JSON.stringify(error)}`}</div>
                 ) : (
-                    <div className="table-responsive">
-                        <table className="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th className="d-none">ID</th>
-                                <th>Descrição</th>
-                                <th>Curso</th>
-                                <th>Semestre</th>
-                                <th className="text-center">Ações</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {classes.length > 0 ? (
-                                classes.map((classItem) => (
-                                    <tr key={classItem.id}>
-                                        <td className="d-none">{classItem.id}</td>
-                                        <td>{classItem.description}</td>
-                                        <td>{classItem.course?.name}</td>
-                                        <td>{classItem.semester?.year+'.'+classItem.semester?.semester+' ('+classItem.semester?.type+')'}</td>
-                                        <td className="text-center">
-                                            <button
-                                                className="btn btn-primary me-2"
-                                                onClick={() => handleEdit(classItem.id)}
-                                            >
-                                                Editar
-                                            </button>
-                                            <button
-                                                className="btn btn-danger"
-                                                onClick={() => handleDeleteRequest(classItem.id)}
-                                            >
-                                                Excluir
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={5} className="text-center">
-                                        Nenhuma classe encontrada
-                                    </td>
-                                </tr>
-                            )}
-                            </tbody>
-                        </table>
+                    <div className="row">
+                        {classes.length > 0 ? (
+                            classes.map((classItem) => (
+                                <div className="col-md-4" key={classItem.id}>
+                                    <ClassCard
+                                        classItem={classItem}
+                                        onEdit={handleEdit}
+                                        onDelete={handleDeleteRequest}
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-12 text-center">
+                                Nenhuma turma encontrada.
+                            </div>
+                        )}
                     </div>
                 )}
-                <div className="d-flex justify-content-center mt-3">
-                    <nav>
-                        <ul className="pagination">
-                            {[...Array(totalPages).keys()].map((_, idx) => (
-                                <li
-                                    key={idx}
-                                    className={`page-item ${page === idx + 1 ? 'active' : ''}`}
-                                    onClick={() => setPage(idx + 1)}
-                                >
-                                    <button className="page-link">{idx + 1}</button>
-                                </li>
-                            ))}
-                        </ul>
-                    </nav>
-                </div>
-                <ClassRegistrationPopup
-                    open={popupOpen}
-                    onClose={() => setPopupOpen(false)}
-                    onSave={handleSaveClass}
-                    classItem={selectedClass}
-                    courses={courses}
-                    semesters={semesters}
-                />
-                <CustomSnackbar
-                    type={snackbar.type}
-                    message={snackbar.message}
-                    duration={6000}
-                    onClose={() => setSnackbar({ ...snackbar, open: false })}
-                />
-                <ConfirmationDialog
-                    open={deleteDialogOpen}
-                    title="Confirmar Exclusão"
-                    message="Tem certeza de que deseja excluir esta classe?"
-                    onConfirm={handleDeleteConfirm}
-                    onCancel={handleDeleteCancel}
-                />
             </div>
+            <ClassRegistrationPopup
+                open={popupOpen}
+                onClose={() => setPopupOpen(false)}
+                onSave={handleSaveClass}
+                classItem={selectedClass}
+                courses={courses}
+                semesters={semesters}
+            />
+            <CustomSnackbar
+                type={snackbar.type}
+                message={snackbar.message}
+                duration={6000}
+                onClose={() => setSnackbar({ ...snackbar, open: false })}
+            />
+            <ConfirmationDialog
+                open={deleteDialogOpen}
+                title="Confirmar Exclusão"
+                message="Tem certeza de que deseja excluir esta classe?"
+                onConfirm={handleDeleteConfirm}
+                onCancel={handleDeleteCancel}
+            />
         </Layout>
     );
 };
