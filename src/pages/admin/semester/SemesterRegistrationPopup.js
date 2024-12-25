@@ -184,7 +184,7 @@ const SemesterRegistrationPopup = ({ open, onClose, onSave, semester }) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onClose}>
+                    <Button variant="danger" onClick={onClose}>
                         Fechar
                     </Button>
                     <Button variant="primary" onClick={handleSave}>

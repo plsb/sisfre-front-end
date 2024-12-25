@@ -7,6 +7,8 @@ import Layout from "../../../layouts/Layout";
 import SchoolSaturdaysRegistrationPopup from './SchoolSaturdaysRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import { Edit, Delete } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 const SchoolSaturdaysList = () => {
     const [schoolSaturdays, setSchoolSaturdays] = useState([]);
@@ -101,7 +103,7 @@ const SchoolSaturdaysList = () => {
     return (
         <Layout sidebar={<AdminMenu />}>
             <div className="container mt-4">
-                <h4>Lista de Sábados Letivos</h4>
+                <h4 className='text-start'>Sábados Letivos</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     {/*<input
                         type="text"
@@ -118,8 +120,8 @@ const SchoolSaturdaysList = () => {
                     <button className="btn btn-primary" onClick={handleSearch}>
                         Pesquisar
                     </button>*/}
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddSchoolSaturday}>
-                        Cadastrar Novo Sábado Letivo
+                    <button className="btn ms-auto" onClick={handleAddSchoolSaturday}>
+                    <AddIcon style={{fontSize:40,color:'green'}} titleAccess='Cadastrar Novo Sábado Letivo' />
                     </button>
                 </div>
                 {loading ? (
@@ -165,16 +167,16 @@ const SchoolSaturdaysList = () => {
                                         </td>
                                         <td className="text-center">
                                             <button
-                                                className="btn btn-primary me-2"
+                                                className="btn"
                                                 onClick={() => handleEdit(schoolSaturday.id)}
                                             >
-                                                Editar
+                                                <Edit style={{ fontSize: 24, color: 'blue' }} titleAccess='Editar Sábado Letivo' />
                                             </button>
                                             <button
-                                                className="btn btn-danger"
+                                                className="btn"
                                                 onClick={() => handleDeleteRequest(schoolSaturday.id)}
                                             >
-                                                Excluir
+                                                <Delete style={{ fontSize: 24, color: 'red' }} titleAccess='Excluir Sábado Letivo' />
                                             </button>
                                         </td>
                                     </tr>

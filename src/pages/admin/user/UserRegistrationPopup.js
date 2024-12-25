@@ -175,7 +175,7 @@ const UserRegistrationPopup = ({ open, onClose, onSave, user }) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onClose}>
+                    <Button variant="danger" onClick={onClose}>
                         Cancelar
                     </Button>
                     <Button variant="primary" onClick={handleSave}>

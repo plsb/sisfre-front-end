@@ -6,6 +6,8 @@ import Layout from "../../../layouts/Layout";
 import SubjectRegistrationPopup from './SubjectRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import { Edit, Delete,Search } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 const SubjectList = () => {
     const [subjects, setSubjects] = useState([]);
@@ -89,7 +91,7 @@ const SubjectList = () => {
     return (
         <Layout sidebar={<AdminMenu />}>
             <div className="container mt-4">
-                <h4>Lista de Disciplinas</h4>
+                <h4 className='text-start'>Disciplinas</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     <input
                         type="text"
@@ -103,11 +105,11 @@ const SubjectList = () => {
                             }
                         }}
                     />
-                    <button className="btn btn-primary" onClick={handleSearch}>
-                        Pesquisar
+                    <button className="btn" onClick={handleSearch}>
+                        <Search style={{ fontSize: 40, color: 'green' }} titleAccess='Pesquisar Disciplina' />
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddSubject}>
-                        Cadastrar Nova Disciplina
+                    <button className="btn ms-auto" onClick={handleAddSubject}>
+                    <AddIcon style={{fontSize:40,color:'blue'}} titleAccess='Cadastrar Nova Disciplina' />
                     </button>
                 </div>
                 {loading ? (
@@ -136,16 +138,16 @@ const SubjectList = () => {
                                         <td>{subject.acronym}</td>
                                         <td className="text-center">
                                             <button
-                                                className="btn btn-primary me-2"
+                                                className="btn"
                                                 onClick={() => handleEdit(subject.id)}
                                             >
-                                                Editar
+                                                <Edit style={{ fontSize: 24, color: 'blue' }} titleAccess='Editar Disciplina' />
                                             </button>
                                             <button
-                                                className="btn btn-danger"
+                                                className="btn"
                                                 onClick={() => handleDeleteRequest(subject.id)}
                                             >
-                                                Excluir
+                                                <Delete style={{ fontSize: 24, color: 'red' }} titleAccess='Excluir Disciplina' />
                                             </button>
                                         </td>
                                     </tr>

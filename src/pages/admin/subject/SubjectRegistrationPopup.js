@@ -117,7 +117,7 @@ const SubjectRegistrationPopup = ({ open, onClose, onSave, subject }) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onClose}>
+                    <Button variant="danger" onClick={onClose}>
                         Cancelar
                     </Button>
                     <Button variant="primary" onClick={handleSave}>

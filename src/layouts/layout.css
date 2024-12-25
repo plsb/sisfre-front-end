@@ -8,16 +8,18 @@
 /* Top bar */
 .topbar {
     background-color: white;
+    width: 100%;
     padding: 10px 20px;
-    border-bottom: 2px solid black; /* Linha preta separando a barra */
+    border-bottom: 2px solid black;
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Alinha a logo à esquerda */
+    justify-content: flex-start;
 }
 
-/* Estilo da logo */
+/* Logo */
 .sidebar-header .logo {
-    width: 150px; /* Logo com tamanho fixo */
+    width: 100%;
+    max-width: 150px;
     height: auto;
 }
 
@@ -25,17 +27,17 @@
 .main-content {
     display: flex;
     flex-grow: 1;
+    flex-wrap: wrap; /* Quebra os elementos em linhas menores */
 }
 
 /* Sidebar */
 .sidebar {
-    background-color: #4CAF50; /* Cor verde do menu */
+    background-color: #4CAF50;
     width: 250px;
     padding-top: 20px;
     flex-shrink: 0;
 }
 
-/* Estilo do menu */
 .sidebar-menu {
     list-style-type: none;
     padding: 0;
@@ -47,23 +49,25 @@
 }
 
 .sidebar-menu li a {
-    color: white; /* Texto branco */
-    font-weight: bold; /* Texto em negrito */
+    color: white;
+    font-weight: bold;
     text-decoration: none;
     display: block;
-    padding: 10px 20px;
+    padding: 12px 15px;
     border-radius: 4px;
 }
 
 .sidebar-menu li a:hover {
-    background-color: #45a049; /* Alterar a cor de fundo no hover */
+    background-color: #45a049;
 }
 
 /* Content */
 .content {
     flex-grow: 1;
     padding: 20px;
-    background-color: #f4f4f4;
+    margin: 10px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
 }
 
 /* Footer */
@@ -72,7 +76,22 @@
     color: white;
     text-align: center;
     padding: 10px;
-    position: relative;
-    bottom: 0;
-    width: 100%;
+    position: sticky;
+    margin-top: auto;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; 
+        position: relative;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    .content {
+        flex-basis: 100%;
+    }
 }

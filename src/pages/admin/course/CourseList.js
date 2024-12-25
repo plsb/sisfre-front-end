@@ -6,6 +6,8 @@ import Layout from "../../../layouts/Layout";
 import CourseRegistrationPopup from './CourseRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog'; // Importing ConfirmationDialog for delete confirmation
+import { Edit, Delete,Search } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 const CourseList = () => {
     const [courses, setCourses] = useState([]);
@@ -100,7 +102,7 @@ const CourseList = () => {
     return (
         <Layout sidebar={<AdminMenu />}>
             <div className="container mt-4">
-                <h4>Lista de Cursos</h4>
+                <h4 className='text-start'>Cursos</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     <input
                         type="text"
@@ -114,11 +116,11 @@ const CourseList = () => {
                             }
                         }}
                     />
-                    <button className="btn btn-primary" onClick={handleSearch}>
-                        Pesquisar
+                    <button className="btn" onClick={handleSearch}>
+                        <Search style={{ fontSize: 40, color: 'green' }} titleAccess='Pesquisar Curso' />
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddCourse}>
-                        Cadastrar Novo Curso
+                    <button className="btn ms-auto" onClick={handleAddCourse}>
+                        <AddIcon style={{fontSize:40,color:'blue'}} titleAccess='Cadastrar Novo Curso' />
                     </button>
                 </div>
                 {loading ? (
@@ -151,16 +153,16 @@ const CourseList = () => {
                                         <td>{course.coordinator ? course.coordinator.username : '-'}</td>
                                         <td className="text-center">
                                             <button
-                                                className="btn btn-primary me-2"
+                                                className="btn"
                                                 onClick={() => handleEdit(course.id)}
                                             >
-                                                Editar
+                                                <Edit style={{ fontSize: 24, color: 'blue' }} titleAccess='Editar Curso' />
                                             </button>
                                             <button
-                                                className="btn btn-danger"
+                                                className="btn"
                                                 onClick={() => handleDeleteRequest(course.id)}
                                             >
-                                                Excluir
+                                                <Delete style={{ fontSize: 24, color: 'red' }} titleAccess='Excluir Curso' />
                                             </button>
                                         </td>
                                     </tr>

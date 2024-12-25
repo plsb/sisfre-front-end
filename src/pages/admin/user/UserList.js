@@ -6,6 +6,8 @@ import Layout from "../../../layouts/Layout";
 import UserRegistrationPopup from './UserRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog'; // Importando o componente
+import { Edit, Delete,Search } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
@@ -89,7 +91,7 @@ const UserList = () => {
     return (
         <Layout sidebar={<AdminMenu />}>
             <div className="container mt-4">
-                <h4>Lista de Usuários</h4>
+                <h4 className='text-start'>Usuários</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     <input
                         type="text"
@@ -103,11 +105,11 @@ const UserList = () => {
                             }
                         }}
                     />
-                    <button className="btn btn-primary" onClick={handleSearch}>
-                        Pesquisar
+                    <button className="btn" onClick={handleSearch}>
+                        <Search style={{ fontSize: 40, color: 'green' }} titleAccess='Pesquisar Usuário' />
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddUser}>
-                        Cadastrar Novo Usuário
+                    <button className="btn ms-auto" onClick={handleAddUser}>
+                        <AddIcon style={{fontSize:40,color:'blue'}} titleAccess='Cadastrar Novo Usuário' />
                     </button>
                 </div>
                 {loading ? (
@@ -136,16 +138,16 @@ const UserList = () => {
                                         <td>{user.email}</td>
                                         <td className="text-center">
                                             <button
-                                                className="btn btn-primary me-2"
+                                                className="btn"
                                                 onClick={() => handleEdit(user.id)}
                                             >
-                                                Editar
+                                                <Edit style={{ fontSize: 24, color: 'blue' }} titleAccess='Editar Usuário' />
                                             </button>
                                             <button
-                                                className="btn btn-danger"
+                                                className="btn"
                                                 onClick={() => handleDeleteRequest(user.id)}
                                             >
-                                                Excluir
+                                                <Delete style={{ fontSize: 24, color: 'red' }} titleAccess='Excluir Usuário' />
                                             </button>
                                         </td>
                                     </tr>

@@ -125,7 +125,7 @@ const SchoolSaturdaysRegistrationPopup = ({ open, onClose, onSave, schoolSaturda
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+                <Button variant="danger" onClick={onClose}>Cancelar</Button>
                 <Button variant="primary" onClick={handleSave}>Salvar</Button>
             </Modal.Footer>
             <CustomSnackbar

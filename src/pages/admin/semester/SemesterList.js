@@ -7,6 +7,8 @@ import SemesterRegistrationPopup from './SemesterRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import {formatDate} from "../../../utils/utils";
+import { Edit, Delete,Search } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 const SemesterList = () => {
     const [semesters, setSemesters] = useState([]);
@@ -90,7 +92,7 @@ const SemesterList = () => {
     return (
         <Layout sidebar={<AdminMenu/>}>
             <div className="container mt-4">
-                <h4>Lista de Semestres</h4>
+                <h4 className='text-start'>Semestres</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     <input
                         type="text"
@@ -104,11 +106,11 @@ const SemesterList = () => {
                             }
                         }}
                     />
-                    <button className="btn btn-primary" onClick={handleSearch}>
-                        Pesquisar
+                    <button className="btn" onClick={handleSearch}>
+                        <Search style={{ fontSize: 40, color: 'green' }} titleAccess='Pesquisar Semestre' />
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddSemester}>
-                        Cadastrar Novo Semestre
+                    <button className="btn ms-auto" onClick={handleAddSemester}>
+                        <AddIcon style={{fontSize:40,color:'blue'}} titleAccess='Cadastrar Novo Semestre' />
                     </button>
                 </div>
                 {loading ? (
@@ -146,16 +148,16 @@ const SemesterList = () => {
                                         <td>{`${formatDate(semester.start_date)} - ${formatDate(semester.end_date)}`}</td>
                                         <td className="text-center">
                                             <button
-                                                className="btn btn-primary me-2"
+                                                className="btn"
                                                 onClick={() => handleEdit(semester.id)}
                                             >
-                                                Editar
+                                                <Edit style={{ fontSize: 24, color: 'blue' }} titleAccess='Editar Semestre' />
                                             </button>
                                             <button
-                                                className="btn btn-danger"
+                                                className="btn"
                                                 onClick={() => handleDeleteRequest(semester.id)}
                                             >
-                                                Excluir
+                                                <Delete style={{ fontSize: 24, color: 'red' }} titleAccess='Excluir Semestre' />
                                             </button>
                                         </td>
                                     </tr>

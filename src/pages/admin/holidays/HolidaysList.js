@@ -6,7 +6,9 @@ import Layout from "../../../layouts/Layout";
 import HolidaysRegistrationPopup from './HolidaysRegistrationPopup';
 import CustomSnackbar from '../../../components/CustomSnackbar';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
-import {formatDate} from "../../../utils/utils";
+import { formatDate } from "../../../utils/utils";
+import { Edit, Delete, Search } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 const HolidaysList = () => {
     const [holidays, setHolidays] = useState([]);
@@ -90,7 +92,7 @@ const HolidaysList = () => {
     return (
         <Layout sidebar={<AdminMenu />}>
             <div className="container mt-4">
-                <h4>Lista de Feriados</h4>
+                <h4 className='text-start'>Feriados</h4>
                 <div className="d-flex align-items-center gap-3 mb-4">
                     <input
                         type="text"
@@ -104,11 +106,11 @@ const HolidaysList = () => {
                             }
                         }}
                     />
-                    <button className="btn btn-primary" onClick={handleSearch}>
-                        Pesquisar
+                    <button className="btn" onClick={handleSearch}>
+                        <Search style={{ fontSize: 40, color: 'green' }} titleAccess='Pesquisar Feriado' />
                     </button>
-                    <button className="btn btn-secondary ms-auto" onClick={handleAddHoliday}>
-                        Cadastrar Novo Feriado
+                    <button className="btn ms-auto" onClick={handleAddHoliday}>
+                        <AddIcon style={{ fontSize: 40, color: 'blue' }} titleAccess='Cadastrar Novo Feriado' />
                     </button>
                 </div>
                 {loading ? (
@@ -119,48 +121,39 @@ const HolidaysList = () => {
                     <div className="alert alert-danger">{`Erro ao carregar feriados: ${JSON.stringify(error)}`}</div>
                 ) : (
                     <div className="table-responsive">
-                        <table className="table table-bordered">
+                        <table className="table table-bordered table-hover">
                             <thead>
-                            <tr>
-                                <th className="d-none">ID</th>
-                                <th>Nome</th>
-                                <th>Data</th>
-                                <th className="text-center">Ações</th>
-                            </tr>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Data</th>
+                                    <th className="text-center">Ações</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            {holidays.length > 0 ? (
-                                holidays.map((holiday) => (
-                                    <tr key={holiday.id}>
-                                        <td className="d-none">{holiday.id}</td>
-                                        <td>{holiday.name}</td>
-                                        <td>{formatDate(holiday.date)}</td>
-                                        <td className="text-center">
-                                            <button
-                                                className="btn btn-primary me-2"
-                                                onClick={() => handleEdit(holiday.id)}
-                                            >
-                                                Editar
-                                            </button>
-                                            <button
-                                                className="btn btn-danger"
-                                                onClick={() => handleDeleteRequest(holiday.id)}
-                                            >
-                                                Excluir
-                                            </button>
-                                        </td>
+                                {holidays.length > 0 ? (
+                                    holidays.map((holiday) => (
+                                        <tr key={holiday.id}>
+                                            <td className="text-truncate">{holiday.name}</td> {/* Quebra longa em espaços limitados */}
+                                            <td>{formatDate(holiday.date)}</td>
+                                            <td className="text-center">
+                                                <button className="btn p-1" onClick={() => handleEdit(holiday.id)}>
+                                                    <Edit style={{ fontSize: 20, color: 'blue' }} titleAccess="Editar Feriado" />
+                                                </button>
+                                                <button className="btn p-1" onClick={() => handleDeleteRequest(holiday.id)}>
+                                                    <Delete style={{ fontSize: 20, color: 'red' }} titleAccess="Excluir Feriado" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={4} className="text-center">Nenhum feriado encontrado</td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={4} className="text-center">
-                                        Nenhum feriado encontrado
-                                    </td>
-                                </tr>
-                            )}
+                                )}
                             </tbody>
                         </table>
                     </div>
+
                 )}
                 <div className="d-flex justify-content-center mt-3">
                     <nav>
