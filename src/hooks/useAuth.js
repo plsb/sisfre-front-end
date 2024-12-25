@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { login as apiLogin } from '../services/api';  // Função de login da API
 import { useNavigate } from 'react-router-dom';  // Importação correta do hook useNavigate
+import { jwtDecode } from 'jwt-decode';
 
 const useAuth = () => {
     const [loading, setLoading] = useState(false);
@@ -13,14 +14,14 @@ const useAuth = () => {
         setError(null);
 
         try {
-            const response = await apiLogin(email, password);  // Chama a função de login na API
-            const { token } = response;  // Supõe-se que a API retorna o token JWT
+            const response = await apiLogin(email, password);
+            const { token } = response;
 
             // Armazenando o token JWT no localStorage para controle de sessão
             localStorage.setItem('token', token);
 
             // Redireciona para a página admin após login bem-sucedido
-            navigate('/admin');  // O navigate() redireciona para o AdminMenu
+            navigate('/');  // O navigate() redireciona para o AdminMenu
         } catch (err) {
             setError('Erro ao autenticar. Tente novamente.');
         } finally {
@@ -36,7 +37,18 @@ const useAuth = () => {
     // Verifica se o usuário está autenticado com base na presença do token no localStorage
     const isAuthenticated = !!localStorage.getItem('token');
 
-    return { handleLogin, handleLogout, loading, error, isAuthenticated };
+    const token = localStorage.getItem('token');
+    let decodedToken = {};
+    if (token) {
+        try {
+            decodedToken = jwtDecode(token);  // Decodifica o token JWT
+        } catch (error) {
+            console.error('Erro ao decodificar o token:', error);
+        }
+    }
+    const roles = decodedToken?.accessType || '';
+
+    return { handleLogin, handleLogout, loading, error, isAuthenticated, roles };
 };
 
 export default useAuth;

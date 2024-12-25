@@ -1,9 +1,8 @@
 import React from 'react';
-import {Link, useNavigate} from 'react-router-dom';
-import useAuth from "../../hooks/useAuth";
+import { Link, useNavigate} from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const AdminMenu = () => {
-
     const { handleLogout } = useAuth();
     const navigate = useNavigate();
 
@@ -15,12 +14,7 @@ const AdminMenu = () => {
 
     return (
         <ul className="sidebar-menu">
-            <li><Link to="/courses">Cursos</Link></li>
-            <li><Link to="/subjects">Disciplinas</Link></li>
-            <li><Link to="/holidays">Feriados</Link></li>
-            <li><Link to="/schoolsatudays">Sábados Letivos</Link></li>
-            <li><Link to="/semesters">Semestres Letivos</Link></li>
-            <li><Link to="/users">Usuários</Link></li>
+            <li><Link to="/classes">Turmas</Link></li>
             <li><a href="/logout" onClick={handleLogoutClick}>Sair</a></li>
         </ul>
     );

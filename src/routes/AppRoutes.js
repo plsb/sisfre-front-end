@@ -2,7 +2,6 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Login from '../pages/login/Login';
 import AdminMenu from '../layouts/menus/AdminMenu';
-import useAuth from '../hooks/useAuth';
 import AdminPage from "../pages/admin/AdminPage";
 import UserList from "../pages/admin/user/UserList";
 import CourseList from "../pages/admin/course/CourseList";
@@ -10,41 +9,110 @@ import SubjectList from "../pages/admin/subject/SubjectList";
 import SemesterList from "../pages/admin/semester/SemesterList";
 import SchoolSaturdaysList from "../pages/admin/schoolSaturdays/SchoolSaturdaysList";
 import HolidaysList from "../pages/admin/holidays/HolidaysList";
+import ProtectedRoute from './ProtectedRoute';
+import ClassList from "../pages/coordinator/class/ClassList";
+import AccessDenied from "../layouts/AccessDenied";
+import CoordinatorMenu from "../layouts/menus/CoordinatorMenu";
+import useAuth from "../hooks/useAuth";
 
 const AppRoutes = () => {
-    const { isAuthenticated } = useAuth();
+    const { roles } = useAuth();
+
+    const menu = roles === 'admin' ? <AdminMenu /> : roles === 'coordinator' ? <CoordinatorMenu /> : null;
 
     return (
         <Routes>
             {/* Rota de Login */}
-            <Route path="/login" element={
-                    <Login />
-            } />
+            <Route path="/login" element={<Login />} />
 
-            {/* Rota do Admin */}
+            <Route path="/unauthorized" element={<AccessDenied />} />
+
+            {/* Rotas protegida para Admin */}
             <Route
                 path="/admin"
-                element={isAuthenticated ? <AdminPage /> : <Login />}
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <AdminPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/"
+                element={
+                    <ProtectedRoute allowedRoles={[roles]}>
+                        {menu || <AccessDenied />}
+                    </ProtectedRoute>
+                }
             />
 
             <Route
-                path="/"
-                element={isAuthenticated ? <AdminMenu /> : <Login />}
+                path="/users"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <UserList />
+                    </ProtectedRoute>
+                }
             />
 
-            <Route path="/users" element={isAuthenticated ? <UserList /> : <Login />} />
+            <Route
+                path="/courses"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <CourseList />
+                    </ProtectedRoute>
+                }
+            />
 
-            <Route path="/courses" element={isAuthenticated ? <CourseList /> : <Login />} />
+            <Route
+                path="/subjects"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <SubjectList />
+                    </ProtectedRoute>
+                }
+            />
 
-            <Route path="/subjects" element={isAuthenticated ? <SubjectList /> : <Login />} />
+            <Route
+                path="/semesters"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <SemesterList />
+                    </ProtectedRoute>
+                }
+            />
 
-            <Route path="/semesters" element={isAuthenticated ? <SemesterList /> : <Login />} />
+            <Route
+                path="/schoolsatudays"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <SchoolSaturdaysList />
+                    </ProtectedRoute>
+                }
+            />
 
-            <Route path="/schoolsatudays" element={isAuthenticated ? <SchoolSaturdaysList /> : <Login />} />
+            <Route
+                path="/holidays"
+                element={
+                    <ProtectedRoute allowedRoles={['admin']}>
+                        <HolidaysList />
+                    </ProtectedRoute>
+                }
+            />
 
-            <Route path="/holidays" element={isAuthenticated ? <HolidaysList /> : <Login />} />
+            {/* Rotas protegida para Coordenador */}
+            <Route
+                path="/classes"
+                element={
+                    <ProtectedRoute allowedRoles={['coordinator']}>
+                        <ClassList />
+                    </ProtectedRoute>
+                }
+            />
+
+
         </Routes>
     );
 };
 
 export default AppRoutes;
+
