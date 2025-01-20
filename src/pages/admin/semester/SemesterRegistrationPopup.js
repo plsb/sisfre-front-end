@@ -93,7 +93,6 @@ const SemesterRegistrationPopup = ({ open, onClose, onSave, semester }) => {
             });
             setErrors({});
         } catch (error) {
-            console.log(error);
             let errorMessage = error.response?.data?.error || "Erro ao cadastrar semestre.";
             setSnackbarMessage(errorMessage);
             setSnackbarType('error');

@@ -1,13 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Delete, Edit} from "@mui/icons-material";
+import { Delete, Edit } from "@mui/icons-material";
+import { useNavigate } from 'react-router-dom';
 
 const ClassCard = ({
                        classItem,
                        onEdit,
                        onDelete
                    }) => {
+    const navigate = useNavigate();
+
+    const handleMontarHorario = () => {
+        navigate(`/class-timetable/${classItem.id}`);
+    };
+
     return (
         <div className="card mb-4">
             <div className="card-header d-flex justify-content-between align-items-center">
@@ -33,11 +40,9 @@ const ClassCard = ({
                 </div>
             </div>
             <div className="card-body">
-                {classItem.classSchedules.length === 0 && (
-                    <button className="btn btn-primary">
+                    <button className="btn btn-primary" onClick={handleMontarHorario}>
                         <i className="fa fa-plus"></i> Montar Horário
-                    </button>)}
-
+                    </button>
             </div>
         </div>
     );
@@ -48,13 +53,14 @@ ClassCard.propTypes = {
         id: PropTypes.number.isRequired,
         description: PropTypes.string.isRequired,
         course: PropTypes.shape({
-            name: PropTypes.string
+            acronym: PropTypes.string
         }),
         semester: PropTypes.shape({
             year: PropTypes.number,
             semester: PropTypes.number,
             type: PropTypes.string
         }),
+        classSchedules: PropTypes.arrayOf(PropTypes.object),
         capacity: PropTypes.number,
         schedule: PropTypes.string,
         instructor: PropTypes.string

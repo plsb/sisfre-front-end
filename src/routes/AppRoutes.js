@@ -110,7 +110,7 @@ const AppRoutes = () => {
                 }
             />
             <Route
-                path="/timetable"
+                path="/class-timetable/:classId"
                 element={
                     <ProtectedRoute allowedRoles={['coordinator']}>
                         <ClassTimetable />
